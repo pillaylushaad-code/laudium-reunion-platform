@@ -38,43 +38,53 @@ function mapStudentToDatabase(updatedDetails) {
   const databaseDetails = {};
 
   if ("currentFirstName" in updatedDetails) {
-    databaseDetails.current_first_name = updatedDetails.currentFirstName;
+    databaseDetails.current_first_name =
+      updatedDetails.currentFirstName;
   }
 
   if ("currentSurname" in updatedDetails) {
-    databaseDetails.current_surname = updatedDetails.currentSurname;
+    databaseDetails.current_surname =
+      updatedDetails.currentSurname;
   }
 
   if ("profilePhoto" in updatedDetails) {
-    databaseDetails.profile_photo = updatedDetails.profilePhoto;
+    databaseDetails.profile_photo =
+      updatedDetails.profilePhoto;
   }
 
   if ("occupation" in updatedDetails) {
-    databaseDetails.occupation = updatedDetails.occupation;
+    databaseDetails.occupation =
+      updatedDetails.occupation;
   }
 
   if ("bio" in updatedDetails) {
-    databaseDetails.bio = updatedDetails.bio;
+    databaseDetails.bio =
+      updatedDetails.bio;
   }
 
   if ("lifeMotto" in updatedDetails) {
-    databaseDetails.life_motto = updatedDetails.lifeMotto;
+    databaseDetails.life_motto =
+      updatedDetails.lifeMotto;
   }
 
   if ("facebook" in updatedDetails) {
-    databaseDetails.facebook = updatedDetails.facebook;
+    databaseDetails.facebook =
+      updatedDetails.facebook;
   }
 
   if ("instagram" in updatedDetails) {
-    databaseDetails.instagram = updatedDetails.instagram;
+    databaseDetails.instagram =
+      updatedDetails.instagram;
   }
 
   if ("linkedin" in updatedDetails) {
-    databaseDetails.linkedin = updatedDetails.linkedin;
+    databaseDetails.linkedin =
+      updatedDetails.linkedin;
   }
 
   if ("businessName" in updatedDetails) {
-    databaseDetails.business_name = updatedDetails.businessName;
+    databaseDetails.business_name =
+      updatedDetails.businessName;
   }
 
   if ("businessDescription" in updatedDetails) {
@@ -83,15 +93,18 @@ function mapStudentToDatabase(updatedDetails) {
   }
 
   if ("businessLink" in updatedDetails) {
-    databaseDetails.business_link = updatedDetails.businessLink;
+    databaseDetails.business_link =
+      updatedDetails.businessLink;
   }
 
   if ("profileCompleted" in updatedDetails) {
-    databaseDetails.profile_completed = updatedDetails.profileCompleted;
+    databaseDetails.profile_completed =
+      updatedDetails.profileCompleted;
   }
 
   if ("quizResult" in updatedDetails) {
-    databaseDetails.quiz_result = updatedDetails.quizResult;
+    databaseDetails.quiz_result =
+      updatedDetails.quizResult;
   }
 
   return databaseDetails;
@@ -103,7 +116,8 @@ function StudentProvider({ children }) {
   const [loadingStudents, setLoadingStudents] = useState(true);
   const [studentError, setStudentError] = useState(null);
   const [authLoading, setAuthLoading] = useState(true);
-  const [isCommitteeMember, setIsCommitteeMember] = useState(false);
+  const [isCommitteeMember, setIsCommitteeMember] =
+    useState(false);
 
   useEffect(() => {
     let mounted = true;
@@ -114,16 +128,28 @@ function StudentProvider({ children }) {
         .select("*")
         .order("reunion_code");
 
-      if (!mounted) return;
-
-      if (error) {
-        console.error("Failed to load students:", error);
-        setStudentError(error.message);
-        setLoadingStudents(false);
+      if (!mounted) {
         return;
       }
 
-      setStudentList(data.map(mapStudentFromDatabase));
+      if (error) {
+        console.error(
+          "Failed to load students:",
+          error
+        );
+
+        setStudentError(error.message);
+        setStudentList([]);
+        setLoadingStudents(false);
+
+        return;
+      }
+
+      setStudentList(
+        data.map(mapStudentFromDatabase)
+      );
+
+      setStudentError(null);
       setLoadingStudents(false);
     }
 
@@ -138,75 +164,114 @@ function StudentProvider({ children }) {
         return;
       }
 
-      const { data: student, error } = await supabase
+      const {
+        data: student,
+        error,
+      } = await supabase
         .from("students")
         .select("*")
         .eq("auth_user_id", session.user.id)
         .single();
 
-      if (!mounted) return;
-
-      if (error) {
-        console.error("Failed to restore student:", error);
-        setLoggedInStudent(null);
-        setIsCommitteeMember(false);
-        setAuthLoading(false);
+      if (!mounted) {
         return;
       }
 
-      setLoggedInStudent(mapStudentFromDatabase(student));
+      if (error || !student) {
+        console.error(
+          "Failed to restore student:",
+          error
+        );
 
-      /*
-       * Committee status comes from Supabase Auth app metadata.
-       *
-       * This means the browser does not need direct access
-       * to the committee_members table.
-       */
+        setLoggedInStudent(null);
+        setIsCommitteeMember(false);
+        setAuthLoading(false);
+
+        return;
+      }
+
+      setLoggedInStudent(
+        mapStudentFromDatabase(student)
+      );
+
       const committeeStatus =
-        session.user.app_metadata?.is_committee_member === true;
+        session.user.app_metadata
+          ?.is_committee_member === true;
 
       setIsCommitteeMember(committeeStatus);
-
       setAuthLoading(false);
     }
 
     async function initialize() {
-      const { data, error } = await supabase.auth.getSession();
+      const {
+        data,
+        error,
+      } = await supabase.auth.getSession();
 
-      if (!mounted) return;
+      if (!mounted) {
+        return;
+      }
 
       if (error) {
-        console.error("Failed to restore session:", error);
+        console.error(
+          "Failed to restore session:",
+          error
+        );
+
         setAuthLoading(false);
+        setLoadingStudents(false);
+
         return;
       }
 
       await loadLoggedInStudent(data.session);
+
+      /*
+       * The students table can only be read by authenticated users.
+       * Therefore the directory is loaded only after the session
+       * has been restored.
+       */
+      if (data.session?.user) {
+        await loadStudents();
+      } else {
+        setLoadingStudents(false);
+      }
     }
 
-    loadStudents();
     initialize();
 
     const {
       data: { subscription },
-    } = supabase.auth.onAuthStateChange(async (event, session) => {
-      if (!mounted) return;
+    } = supabase.auth.onAuthStateChange(
+      async (event, session) => {
+        if (!mounted) {
+          return;
+        }
 
-      if (event === "SIGNED_OUT") {
-        setLoggedInStudent(null);
-        setIsCommitteeMember(false);
-        setAuthLoading(false);
-        return;
-      }
+        if (event === "SIGNED_OUT") {
+          setLoggedInStudent(null);
+          setIsCommitteeMember(false);
+          setStudentList([]);
+          setStudentError(null);
+          setLoadingStudents(false);
+          setAuthLoading(false);
 
-      if (
-        event === "SIGNED_IN" ||
-        event === "TOKEN_REFRESHED" ||
-        event === "USER_UPDATED"
-      ) {
-        await loadLoggedInStudent(session);
+          return;
+        }
+
+        if (
+          event === "SIGNED_IN" ||
+          event === "TOKEN_REFRESHED" ||
+          event === "USER_UPDATED"
+        ) {
+          await loadLoggedInStudent(session);
+
+          if (session?.user) {
+            await loadStudents();
+          }
+        }
       }
-    });
+    );
 
     return () => {
       mounted = false;
@@ -222,9 +287,13 @@ function StudentProvider({ children }) {
       };
     }
 
-    const databaseDetails = mapStudentToDatabase(updatedDetails);
+    const databaseDetails =
+      mapStudentToDatabase(updatedDetails);
 
-    const { data, error } = await supabase
+    const {
+      data,
+      error,
+    } = await supabase
       .from("students")
       .update(databaseDetails)
       .eq("id", loggedInStudent.id)
@@ -232,7 +301,10 @@ function StudentProvider({ children }) {
       .single();
 
     if (error) {
-      console.error("Failed to update student:", error);
+      console.error(
+        "Failed to update student:",
+        error
+      );
 
       return {
         success: false,
@@ -240,7 +312,8 @@ function StudentProvider({ children }) {
       };
     }
 
-    const updatedStudent = mapStudentFromDatabase(data);
+    const updatedStudent =
+      mapStudentFromDatabase(data);
 
     setLoggedInStudent(updatedStudent);
 
@@ -248,8 +321,8 @@ function StudentProvider({ children }) {
       currentStudents.map((student) =>
         student.id === updatedStudent.id
           ? updatedStudent
-          : student,
-      ),
+          : student
+      )
     );
 
     return {
