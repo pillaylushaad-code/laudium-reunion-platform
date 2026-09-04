@@ -1,5 +1,5 @@
 import { useContext, useState } from "react";
-import "./CreateProfilePage.css";
+import "./CreateprofilePage.css";
 import StudentContext from "../../context/StudentContext";
 import { supabase } from "../../lib/supabase";
 import { useNavigate } from "react-router-dom";
