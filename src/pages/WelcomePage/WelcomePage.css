@@ -1,0 +1,341 @@
+/* ========================================
+   WELCOME PAGE
+   ======================================== */
+
+.welcome-page {
+  position: relative;
+
+  min-height: 100vh;
+  padding: var(--space-3xl) var(--page-padding);
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  text-align: center;
+
+  overflow: hidden;
+
+  background:
+    radial-gradient(
+      circle at 50% 15%,
+      rgba(24, 59, 102, 0.22),
+      transparent 45%
+    ),
+    linear-gradient(
+      135deg,
+      var(--color-background),
+      var(--color-background-soft)
+    );
+}
+
+
+/* ========================================
+   WELCOME CONTENT
+   ======================================== */
+
+.welcome-content {
+  width: 100%;
+  max-width: 900px;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+
+/* ========================================
+   CREST
+   ======================================== */
+
+.school-crest {
+  width: 150px;
+  height: auto;
+
+  margin-bottom: var(--space-lg);
+
+  filter:
+    drop-shadow(0 8px 20px rgba(0, 0, 0, 0.35));
+
+  animation:
+    welcome-crest-enter 700ms var(--ease-standard) both;
+}
+
+
+/* ========================================
+   CLASS LABEL
+   ======================================== */
+
+.class-title {
+  margin-bottom: var(--space-md);
+
+  color: var(--color-gold);
+
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+
+  animation:
+    welcome-content-enter 600ms 100ms var(--ease-standard) both;
+}
+
+
+/* ========================================
+   MAIN TITLE
+   ======================================== */
+
+.welcome-title {
+  max-width: 800px;
+
+  margin-bottom: var(--space-lg);
+
+  font-size: clamp(2.75rem, 7vw, 5rem);
+  font-weight: var(--font-weight-bold);
+
+  letter-spacing: var(--letter-spacing-tight);
+  line-height: 1;
+
+  animation:
+    welcome-content-enter 600ms 180ms var(--ease-standard) both;
+}
+
+
+/* ========================================
+   TAGLINE
+   ======================================== */
+
+.welcome-tagline {
+  max-width: 680px;
+
+  margin-bottom: var(--space-md);
+
+  color: var(--color-text);
+
+  font-size: var(--font-size-lg);
+  line-height: var(--line-height-relaxed);
+
+  animation:
+    welcome-content-enter 600ms 260ms var(--ease-standard) both;
+}
+
+
+/* ========================================
+   DESCRIPTION
+   ======================================== */
+
+.welcome-description {
+  max-width: 620px;
+
+  margin-bottom: var(--space-2xl);
+
+  color: var(--color-text-muted);
+
+  line-height: var(--line-height-relaxed);
+
+  animation:
+    welcome-content-enter 600ms 340ms var(--ease-standard) both;
+}
+
+
+/* ========================================
+   BEGIN BUTTON
+   ======================================== */
+
+.begin-btn {
+  display: inline-flex;
+
+  align-items: center;
+  justify-content: center;
+
+  min-width: 190px;
+
+  padding: 14px 28px;
+
+  color: var(--color-text);
+  background: var(--color-blue);
+
+  border: 1px solid var(--color-blue-light);
+  border-radius: var(--radius-md);
+
+  font-size: var(--font-size-md);
+  font-weight: var(--font-weight-semibold);
+
+  text-decoration: none;
+
+  box-shadow: var(--shadow-sm);
+
+  transition:
+    transform var(--transition-normal),
+    background var(--transition-normal),
+    border-color var(--transition-normal),
+    box-shadow var(--transition-normal);
+
+  animation:
+    welcome-content-enter 600ms 420ms var(--ease-standard) both;
+}
+
+.begin-btn:hover {
+  color: var(--color-text);
+
+  background: var(--color-blue-light);
+
+  border-color: var(--color-gold);
+
+  transform: translateY(-3px);
+
+  box-shadow:
+    var(--shadow-md),
+    0 0 18px rgba(40, 89, 143, 0.2);
+}
+
+.begin-btn:active {
+  transform: translateY(-1px);
+}
+
+
+/* ========================================
+   REUNION FLYER
+   ======================================== */
+
+.welcome-flyer-section {
+  width: 100%;
+  max-width: 760px;
+
+  margin-top: var(--space-3xl);
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  animation:
+    welcome-flyer-enter 700ms 520ms var(--ease-standard) both;
+}
+
+.welcome-flyer-label {
+  margin-bottom: var(--space-lg);
+
+  color: var(--color-gold);
+
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.welcome-flyer {
+  display: block;
+
+  width: 100%;
+  max-width: 720px;
+  height: auto;
+
+  border: 1px solid rgba(201, 164, 76, 0.45);
+  border-radius: var(--radius-md);
+
+  box-shadow:
+    var(--shadow-lg),
+    0 0 35px rgba(0, 0, 0, 0.25);
+}
+
+
+/* ========================================
+   ANIMATIONS
+   ======================================== */
+
+@keyframes welcome-crest-enter {
+  from {
+    opacity: 0;
+    transform: translateY(-16px) scale(0.96);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes welcome-content-enter {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes welcome-flyer-enter {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+
+/* ========================================
+   ACCESSIBILITY
+   ======================================== */
+
+@media (prefers-reduced-motion: reduce) {
+  .school-crest,
+  .class-title,
+  .welcome-title,
+  .welcome-tagline,
+  .welcome-description,
+  .begin-btn,
+  .welcome-flyer-section {
+    animation: none;
+  }
+
+  .begin-btn {
+    transition: none;
+  }
+}
+
+
+/* ========================================
+   MOBILE
+   ======================================== */
+
+@media (max-width: 600px) {
+  .welcome-page {
+    padding: var(--space-2xl) var(--page-padding);
+  }
+
+  .school-crest {
+    width: 120px;
+  }
+
+  .welcome-tagline {
+    font-size: var(--font-size-md);
+  }
+
+  .welcome-description {
+    font-size: var(--font-size-sm);
+  }
+
+  .begin-btn {
+    width: 100%;
+    max-width: 280px;
+  }
+
+  .welcome-flyer-section {
+    margin-top: var(--space-2xl);
+  }
+
+  .welcome-flyer {
+    width: 100%;
+    border-radius: var(--radius-sm);
+  }
+}
