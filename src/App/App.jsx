@@ -3,7 +3,7 @@ import { Routes, Route } from "react-router-dom";
 import WelcomePage from "../pages/WelcomePage/WelcomePage";
 import LoginPage from "../pages/LoginPage/LoginPage";
 import DashboardPage from "../pages/DashboardPage/DashboardPage";
-import CreateProfilePage from "../pages/CreateProfilePage/CreateProfilePage";
+import CreateProfilePage from "../pages/CreateprofilePage/CreateprofilePage";
 import ProfilePage from "../pages/ProfilePage/ProfilePage";
 import QuizPage from "../pages/QuizPage/QuizPage";
 import StudentDirectoryPage from "../pages/StudentDirectory/StudentDirectoryPage";
